@@ -46,10 +46,6 @@ pipelines: # tells plugin that here are pipelines by name
                 MONO_PATH: /usr/bin/local/mono
               secure_variables:
                 PASSWORD: "s&Du#@$xsSa"
-              properties:
-                perf:
-                  source: test.xml
-                  xpath: "substring-before(//report/data/all/coverage[starts-with(@type,\u0027class\u0027)]/@value, \u0027%\u0027)"
               tasks:
                - fetch:
                    pipeline: pipe2

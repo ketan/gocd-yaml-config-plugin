@@ -13,9 +13,5 @@ test:
         destination: dest
     - build:
         source: bin
-  properties:
-    perf:
-      source: test.xml
-      xpath: "substring-before(//report/data/all/coverage[starts-with(@type,\u0027class\u0027)]/@value, \u0027%\u0027)"
   tasks:
     - null

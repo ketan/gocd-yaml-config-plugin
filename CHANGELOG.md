@@ -1,5 +1,7 @@
 ### 0.11.3 - Unreleased
 
+* removed support for `properties` attribute on a `job`
+
 ### 0.11.2 (2019-Aug-22)
 
 * updated README documenting `allow_only_on_success` attribute for approval in stages

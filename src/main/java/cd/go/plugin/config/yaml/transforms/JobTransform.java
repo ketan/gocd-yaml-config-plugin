@@ -43,8 +43,6 @@ public class JobTransform extends ConfigurationTransform {
     private static final String JSON_JOB_ARTIFACT_STORE_ID_FIELD = "store_id";
     private static final String YAML_JOB_ARTIFACT_STORE_ID_FIELD = "store_id";
 
-    private static final String YAML_JOB_PROPS_FIELD = "properties";
-    private static final String JSON_JOB_PROPS_FIELD = "properties";
     private static final String JSON_JOB_PROP_NAME_FIELD = "name";
     private static final String JSON_JOB_PROP_SOURCE_FIELD = "source";
     private static final String YAML_JOB_PROP_SOURCE_FIELD = "source";
@@ -84,7 +82,6 @@ public class JobTransform extends ConfigurationTransform {
         addOptionalStringList(jobJson, jobMap, JSON_JOB_RESOURCES_FIELD, YAML_JOB_RESOURCES_FIELD);
         addOptionalString(jobJson, jobMap, JSON_JOB_ELASTIC_PROFILE_FIELD, YAML_JOB_ELASTIC_PROFILE_FIELD);
         addArtifacts(jobJson, jobMap);
-        addProperties(jobJson, jobMap);
         addTasks(jobJson, jobMap);
         return jobJson;
     }
@@ -110,7 +107,6 @@ public class JobTransform extends ConfigurationTransform {
         addOptionalValue(jobData, job, JSON_JOB_ELASTIC_PROFILE_FIELD, YAML_JOB_ELASTIC_PROFILE_FIELD);
 
         addInverseArtifacts(jobData, job);
-        addInverseProperties(jobData, job);
         addInverseTasks(jobData, job);
         inverseJob.put(jobName, jobData);
         return inverseJob;
@@ -152,44 +148,6 @@ public class JobTransform extends ConfigurationTransform {
         }
 
         jobData.put(YAML_JOB_TASKS_FIELD, inverseTasks);
-    }
-
-    private void addInverseProperties(Map<String, Object> jobData, Map<String, Object> job) {
-        List<Map<String, Object>> properties = (List<Map<String, Object>>) job.get(JSON_JOB_PROPS_FIELD);
-        if (properties == null || properties.isEmpty())
-            return;
-
-        Map<String, Object> inverseProperties = new LinkedTreeMap<>();
-
-        for (Map<String, Object> prop : properties) {
-            String name = (String) prop.remove(JSON_JOB_PROP_NAME_FIELD);
-            inverseProperties.put(name, prop);
-        }
-
-        jobData.put(YAML_JOB_PROPS_FIELD, inverseProperties);
-    }
-
-    private void addProperties(JsonObject jobJson, Map<String, Object> jobMap) {
-        Object props = jobMap.get(YAML_JOB_PROPS_FIELD);
-        if (props == null)
-            return;
-        if (!(props instanceof Map))
-            throw new YamlConfigException("properties should be a hash");
-        JsonArray propsJson = new JsonArray();
-        Map<String, Object> propsMap = (Map<String, Object>) props;
-        for (Map.Entry<String, Object> propEntry : propsMap.entrySet()) {
-            String propName = propEntry.getKey();
-            Object propObj = propEntry.getValue();
-            if (!(propObj instanceof Map))
-                throw new YamlConfigException("property " + propName + " should be a hash");
-            Map<String, Object> propMap = (Map<String, Object>) propObj;
-            JsonObject propJson = new JsonObject();
-            propJson.addProperty(JSON_JOB_PROP_NAME_FIELD, propName);
-            addRequiredString(propJson, propMap, JSON_JOB_PROP_SOURCE_FIELD, YAML_JOB_PROP_SOURCE_FIELD);
-            addRequiredString(propJson, propMap, JSON_JOB_PROP_XPATH_FIELD, YAML_JOB_PROP_XPATH_FIELD);
-            propsJson.add(propJson);
-        }
-        jobJson.add(JSON_JOB_PROPS_FIELD, propsJson);
     }
 
     private void addInverseArtifacts(Map<String, Object> jobData, Map<String, Object> job) {

@@ -602,19 +602,6 @@ tabs:
   gauge: functional-reports/index.html
 ```
 
-### Property
-
-Job can have properties, declared as a hash:
-```yaml
-properties:
-  cov1: # this is the name of property
-    source: test.xml
-    xpath: "substring-before(//report/data/all/coverage[starts-with(@type,\u0027class\u0027)]/@value, \u0027%\u0027)"
-  performance.ind1.mbps:
-    source: PerfTestReport.xml
-    xpath: "//PerformanceSuiteReport/WriteOnly/MBps"
-```
-
 ### Single job stage
 
 A common use case is that stage has only one job. This plugin provides a shorthand
